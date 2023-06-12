@@ -1,30 +1,44 @@
 // Реализовать паттерн «адаптер» на любом примере.
 package main
 
+import "fmt"
+
 // Adaptee
-type Adaptee struct {
+type MemoryCard struct{}
+
+func (mc *MemoryCard) insert() string {
+	return "Карта памяти успешно вставлена!"
 }
 
-func (a *Adaptee) SpecificRequest() string {
-	return "Request"
+func (mc *MemoryCard) copyData() string {
+	return "Данные скопированы на компьютер!"
 }
 
 // Interface
-type Target interface {
-	Request() string
+type USB interface {
+	connectWithUsbCable()
+}
+
+func connectWithUsbCable() {
+	fmt.Println("Подключение по кабелю осуществлено!")
 }
 
 // Adapter
-type Adapter struct {
-	*Adaptee
+type CardReader struct {
+	*MemoryCard
 }
 
-func NewAdapter(adaptee *Adaptee) Target {
-	return &Adapter{adaptee}
+func NewAdapter(mc *MemoryCard) USB {
+	return &CardReader{mc}
 }
 
-func (a *Adapter) Request() string {
-	return a.SpecificRequest()
+func (cr *CardReader) connectWithUsbCable() {
+	fmt.Println(cr.insert(), cr.copyData())
 }
 
-func main() {}
+func main() {
+	cr := CardReader{
+		MemoryCard: &MemoryCard{},
+	}
+	cr.connectWithUsbCable()
+}
