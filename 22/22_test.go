@@ -1,49 +1,49 @@
 package main
 
 import (
-	"math"
+	"math/big"
 	"testing"
 )
 
 func TestDistance(t *testing.T) {
 	tastCases := []struct {
 		variables          Calculator
-		multiplicationWant int64
-		divisionWant       int64
-		summarizeWant      int64
-		subtractWant       int64
+		multiplicationWant *big.Int
+		divisionWant       *big.Int
+		summarizeWant      *big.Int
+		subtractWant       *big.Int
 	}{
 		{
 			variables: Calculator{
-				a: int64(math.Pow(2, 10)),
-				b: int64(math.Pow(2, 10)),
+				a: big.NewInt(1 << 10),
+				b: big.NewInt(1 << 10),
 			},
-			multiplicationWant: int64(math.Pow(2, 20)),
-			divisionWant:       1,
-			summarizeWant:      int64(math.Pow(2, 11)),
-			subtractWant:       0,
+			multiplicationWant: big.NewInt(1 << 20),
+			divisionWant:       big.NewInt(1),
+			summarizeWant:      big.NewInt(1 << 11),
+			subtractWant:       big.NewInt(0),
 		},
 	}
 	for _, ts := range tastCases {
-		if got := Multiplication(ts.variables); got != ts.multiplicationWant {
+		if got := Multiplication(ts.variables); got.Cmp(ts.multiplicationWant) != 0 {
 			t.Errorf("Multiplication() = %v, want %v", got, ts.multiplicationWant)
 		}
 	}
 
 	for _, ts := range tastCases {
-		if got := Division(ts.variables); got != ts.divisionWant {
+		if got := Division(ts.variables); got.Cmp(ts.divisionWant) != 0 {
 			t.Errorf("Division() = %v, want %v", got, ts.divisionWant)
 		}
 	}
 
 	for _, ts := range tastCases {
-		if got := Summarize(ts.variables); got != ts.summarizeWant {
+		if got := Summarize(ts.variables); got.Cmp(ts.summarizeWant) != 0 {
 			t.Errorf("Summarize() = %v, want %v", got, ts.summarizeWant)
 		}
 	}
 
 	for _, ts := range tastCases {
-		if got := Subtract(ts.variables); got != ts.subtractWant {
+		if got := Subtract(ts.variables); got.Cmp(ts.subtractWant) != 0 {
 			t.Errorf("SummSubtractarize() = %v, want %v", got, ts.subtractWant)
 		}
 	}
